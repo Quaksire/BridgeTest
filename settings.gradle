@@ -1,0 +1,4 @@
+include ':app', ':app.repository',
+        ':app.model',
+        ':app.net',
+        ':app.log'

@@ -1,0 +1,98 @@
+ext {
+
+    // Compile and build
+    compileSdkVersion = 26
+    minSdkVersion = 15
+    targetSdkVersion = 26
+
+    //Support
+    supportVersion = '26.1.0'
+
+    //ConstraintLayout
+    constraintLayoutVersion = '1.0.2'
+
+    //Rx
+    rxAndroidVersion = '1.2.1'
+    rxJavaVersion = '1.1.8'
+
+    //Picasso
+    picassoVersion = '2.5.2'
+
+    //Retrofit 2
+    retrofitVersion = '2.1.0'
+    okioVersion = '1.6.0'
+    okHttpVersion = '2.3.0'
+
+    //Memory leak
+    leakcanaryVersion = '1.5'
+
+    //Dependency injection
+    daggerVersion = '2.9'
+    butterknifeVersion = '8.5.1'
+
+    //Testing
+    jUnitVersion = '4.12'
+    powerMockitoVersion = '1.6.1'
+    roboelectricVersion = '3.1-rc1'
+
+    //Integration testing
+    expressoVersion = '3.0.1'
+
+    appDependencies = [
+            appCompatV7: "com.android.support:appcompat-v7:${supportVersion}",
+            supportV4:  "com.android.support:support-v4:${supportVersion}",
+            design: "com.android.support:design:${supportVersion}",
+
+            cardview: "com.android.support:cardview-v7:${supportVersion}",
+            recyclerview: "com.android.support:recyclerview-v7:${supportVersion}",
+            constraintLayout: "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
+
+            rxAndroid: "io.reactivex:rxandroid:${rxAndroidVersion}",
+            rxJava: "io.reactivex:rxjava:${rxJavaVersion}",
+
+            retrofit: "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+            retrofitGsonConverter : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
+            retrofitRxAdapter: "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}",
+            okio:  "com.squareup.okio:okio:${okioVersion}",
+            okHttp: "com.squareup.okhttp:okhttp:${okHttpVersion}",
+
+            picasso: "com.squareup.picasso:picasso:${picassoVersion}",
+
+            dagger: "com.google.dagger:dagger:${daggerVersion}",
+
+            butterknife: "com.jakewharton:butterknife:${butterknifeVersion}"
+    ]
+
+    testDependencies = [
+            junit: "junit:junit:${jUnitVersion}",
+
+            powermock: "org.powermock:powermock-api-mockito:${powerMockitoVersion}",
+            powermockJunit4: "org.powermock:powermock-module-junit4:${powerMockitoVersion}",
+            powermockJunit4Rule: "org.powermock:powermock-module-junit4-rule:${powerMockitoVersion}",
+            powermockJunit4RuleAgent: "org.powermock:powermock-module-junit4-rule-agent:${powerMockitoVersion}",
+
+            roboelectric: "org.robolectric:robolectric:${roboelectricVersion}",
+
+            memoryleak: "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryVersion}",
+
+            retrofitmock: "com.squareup.retrofit2:retrofit-mock:${retrofitVersion}",
+    ]
+
+    androidTestDependencies = [
+            expressocontrib: "com.android.support.test.espresso:espresso-contrib:${expressoVersion}",
+            expresso: "com.android.support.test.espresso:espresso-core:${expressoVersion}",
+    ]
+
+    debugDependencies = [
+            memoryleak: "com.squareup.leakcanary:leakcanary-android:${leakcanaryVersion}"
+    ]
+
+    releaseDependencies = [
+            memoryleak: "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryVersion}"
+    ]
+
+    aptDependencies = [
+            daggercompiler: "com.google.dagger:dagger-compiler:${daggerVersion}",
+            butterknifecompiler: "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
+    ]
+}

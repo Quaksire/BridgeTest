@@ -1,0 +1,96 @@
+apply plugin: 'com.android.library'
+
+apply plugin: 'checkstyle'
+apply plugin: 'jacoco'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/db_schema".toString()]
+            }
+        }
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation (
+            project(':app.net'),
+            project(':app.model'),
+            project(':app.log'),
+            appDependencies.dagger,
+            appDependencies.rxJava,
+            appDependencies.retrofit,
+
+            "android.arch.persistence.room:runtime:1.0.0"
+    )
+
+    testCompile (
+            testDependencies.junit,
+
+            testDependencies.powermock,
+            testDependencies.powermockJunit4,
+            testDependencies.powermockJunit4Rule,
+            testDependencies.powermockJunit4RuleAgent,
+
+            testDependencies.retrofitmock,
+    )
+
+    androidTestCompile "com.android.support:support-annotations:26.1.0"
+    androidTestCompile 'com.android.support.test:runner:0.5'
+
+    annotationProcessor (
+            aptDependencies.daggercompiler,
+
+            "android.arch.persistence.room:compiler:1.0.0"
+    )
+}
+
+task checkstyle(type: Checkstyle) {
+    logger.log(LogLevel.DEBUG, "CheckStyle start")
+    description 'Checks if the code is somewhat acceptable'
+    configFile file('../app.configuration/checkstyle.xml')
+    source 'src/main/java'
+    include '**/*.java'
+    exclude '**/gen/**'
+    classpath = files() // empty because unnecessary for checkstyle
+    logger.log(LogLevel.DEBUG, "CheckStyle end")
+}
+
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+    executionData = fileTree(dir: "$buildDir", includes: [
+            "jacoco/testDebugUnitTest.exec",
+            "outputs/code-coverage/connected/*coverage.ec"
+    ])
+}

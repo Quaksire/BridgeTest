@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Bridge International Academy</string>
+
+    <string name="pupil_name">Name</string>
+    <string name="pupil_country">Country</string>
+    <string name="title_activity_detail">Pupil</string>
+
+    <string name="delete_pupil">Delete pupil</string>
+    <string name="delete_pupil_message">Are you sure?</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+
+    <string name="action_settings">Settings</string>
+</resources>

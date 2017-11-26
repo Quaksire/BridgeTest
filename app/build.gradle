@@ -1,0 +1,129 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'checkstyle'
+apply plugin: 'jacoco'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        applicationId "com.quaksire.boilerplate"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+
+    implementation(
+            project(':app.log'),
+            project(':app.model'),
+            project(':app.repository'),
+            project(':app.net'),
+
+            appDependencies.appCompatV7,
+            appDependencies.cardview,
+            appDependencies.recyclerview,
+            appDependencies.constraintLayout,
+            appDependencies.picasso,
+
+            appDependencies.retrofit,
+            appDependencies.retrofitGsonConverter,
+            appDependencies.retrofitRxAdapter,
+            appDependencies.okio,
+            appDependencies.okHttp,
+            appDependencies.rxAndroid,
+            appDependencies.rxJava,
+            appDependencies.butterknife,
+            appDependencies.dagger,
+
+            "android.arch.persistence.room:runtime:1.0.0"
+    )
+
+    implementation 'com.android.support:design:26.1.0'
+    testImplementation(
+            testDependencies.junit,
+
+            testDependencies.powermock,
+            testDependencies.powermockJunit4,
+            testDependencies.powermockJunit4Rule,
+            testDependencies.powermockJunit4RuleAgent,
+            testDependencies.memoryleak,
+            testDependencies.roboelectric,
+
+            testDependencies.retrofitmock,
+    )
+
+    androidTestImplementation('com.squareup.okhttp3:mockwebserver:3.3.0')
+    androidTestImplementation(androidTestDependencies.expresso)
+    androidTestImplementation(androidTestDependencies.expressocontrib) {
+        exclude module: 'support-annotations'
+        exclude module: 'support-v4'
+        exclude module: 'support-v13'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'design'
+    }
+
+//    androidTestCompile (
+//            androidTestDependencies.expresso,
+//            {
+//                exclude group: 'com.android.support', module: 'support-annotations'
+//            },
+//    )
+
+    debugCompile(
+            debugDependencies.memoryleak
+    )
+
+    releaseCompile(
+            releaseDependencies.memoryleak
+    )
+
+    annotationProcessor(
+            aptDependencies.daggercompiler,
+            aptDependencies.butterknifecompiler
+    )
+}
+
+task checkstyle(type: Checkstyle) {
+    logger.log(LogLevel.DEBUG, "CheckStyle start")
+    description 'Checks if the code is somewhat acceptable'
+    configFile file('../checkstyle.xml')
+    source 'src/main/java'
+    include '**/*.java'
+    exclude '**/gen/**'
+    classpath = files() // empty because unnecessary for checkstyle
+    logger.log(LogLevel.DEBUG, "CheckStyle end")
+}
+
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+    executionData = fileTree(dir: "$buildDir", includes: [
+            "jacoco/testDebugUnitTest.exec",
+            "outputs/code-coverage/connected/*coverage.ec"
+    ])
+}
